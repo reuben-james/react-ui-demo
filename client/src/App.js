@@ -45,7 +45,7 @@ function App() {
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>String Encrypt/Decrypt Application</h1>
+      <h1>String Encrypt/Decrypt Demo</h1>
       <form onSubmit={handleSubmit}>
         {operation === 'encrypt' ? (
           <>
