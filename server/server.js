@@ -5,8 +5,8 @@ const cors = require('cors');
 const app = express();
 const PORT = 5000;
 
-// Secret key for encryption and decryption (store securely in production)
-const SECRET_KEY = 'PpmU5Vkgbfs7Y5ppFIJ644INlknqseDU'; // Key must be 16, 24, or 32 bytes for AES
+// Ensure this key is exactly 64 hex characters (32 bytes)
+const SECRET_KEY = 'your-64-char-long-hexadecimal-key-here'; // Replace with actual key
 const ALGORITHM = 'aes-256-cbc';
 
 // Enable CORS and JSON parsing middleware
@@ -16,7 +16,7 @@ app.use(express.json());
 // Function to encrypt a string
 function encrypt(text) {
     const iv = crypto.randomBytes(16); // Initialization vector
-    const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(SECRET_KEY), iv);
+    const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(SECRET_KEY, 'hex'), iv);
     let encrypted = cipher.update(text, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     return iv.toString('hex') + ':' + encrypted;
@@ -27,7 +27,7 @@ function decrypt(text) {
     const parts = text.split(':');
     const iv = Buffer.from(parts.shift(), 'hex');
     const encryptedText = parts.join(':');
-    const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY), iv);
+    const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY, 'hex'), iv);
     let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;
